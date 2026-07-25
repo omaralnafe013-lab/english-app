@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "تعلّم الإنجليزية",
+    "slug": "english-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "englishapp",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0F1729",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.omaralnafe.englishapp",
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      }
+    },
+    "android": {
+      "package": "com.omaralnafe.englishapp",
+      "adaptiveIcon": {
+        "backgroundColor": "#0F1729",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
