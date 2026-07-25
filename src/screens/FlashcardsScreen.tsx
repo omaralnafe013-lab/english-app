@@ -5,7 +5,7 @@ import { ALL_WORDS, getWord } from '../data/lessons';
 import { useProgress } from '../lib/progress';
 import { MAX_BOX } from '../lib/srs';
 import { speakEnglish } from '../lib/speech';
-import { colors, radius, spacing } from '../theme';
+import { colors, fonts, radius, spacing } from '../theme';
 import { ArabicText, Button, Card, EmptyState, EnglishText, Fraction, ProgressBar, SpeakButton } from '../components/ui';
 
 const SESSION_SIZE = 15;
@@ -211,7 +211,6 @@ export function FlashcardsScreen() {
         <Animated.View
           style={[styles.flipCard, styles.cardBack, { transform: [{ perspective: 1000 }, { rotateY: backRotate }] }]}>
           <ArabicText style={styles.backWord}>{word.ar}</ArabicText>
-          <ArabicText style={styles.backSay}>النطق: {word.say}</ArabicText>
           <View style={styles.backDivider} />
           <EnglishText style={styles.backExample}>{word.example}</EnglishText>
           <ArabicText style={styles.backExampleAr}>{word.exampleAr}</ArabicText>
@@ -242,7 +241,6 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 26,
-    fontWeight: '800',
   },
   subheading: {
     fontSize: 14,
@@ -261,8 +259,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   bigNumber: {
+    fontFamily: fonts.light,
     fontSize: 38,
-    fontWeight: '800',
     color: colors.primary,
   },
   startInfo: {
@@ -271,7 +269,6 @@ const styles = StyleSheet.create({
   },
   startTitle: {
     fontSize: 17,
-    fontWeight: '800',
   },
   startSub: {
     fontSize: 13,
@@ -290,7 +287,6 @@ const styles = StyleSheet.create({
   },
   summaryTitle: {
     fontSize: 24,
-    fontWeight: '800',
     marginTop: spacing.md,
   },
   summaryText: {
@@ -317,12 +313,10 @@ const styles = StyleSheet.create({
   counter: {
     fontSize: 14,
     color: colors.textMuted,
-    fontWeight: '700',
   },
   exit: {
     fontSize: 14,
     color: colors.textFaint,
-    fontWeight: '700',
   },
   cardArea: {
     flex: 1,
@@ -355,7 +349,6 @@ const styles = StyleSheet.create({
   },
   frontWord: {
     fontSize: 36,
-    fontWeight: '800',
     color: colors.primary,
     textAlign: 'center',
   },
@@ -376,13 +369,6 @@ const styles = StyleSheet.create({
   },
   backWord: {
     fontSize: 30,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-  backSay: {
-    fontSize: 14,
-    color: colors.textMuted,
-    marginTop: spacing.sm,
     textAlign: 'center',
   },
   backDivider: {
@@ -394,7 +380,6 @@ const styles = StyleSheet.create({
   backExample: {
     fontSize: 17,
     textAlign: 'center',
-    fontStyle: 'italic',
     color: colors.text,
   },
   backExampleAr: {
@@ -412,7 +397,6 @@ const styles = StyleSheet.create({
   },
   listenAgainText: {
     fontSize: 13,
-    fontWeight: '700',
     color: colors.primary,
   },
   answerRow: {

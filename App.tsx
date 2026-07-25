@@ -1,3 +1,6 @@
+// نستورد وزن Light وحده من مساره المباشر — الاستيراد من جذر الحزمة يحزم أوزان Tajawal السبعة كلها
+import { Tajawal_300Light } from '@expo-google-fonts/tajawal/300Light';
+import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -83,6 +86,18 @@ function AppContent() {
 }
 
 export default function App() {
+  // ننتظر تحميل خط Tajawal قبل العرض حتى لا تظهر الواجهة بالخط الافتراضي ثم تقفز
+  const [fontsLoaded, fontError] = useFonts({ Tajawal_300Light });
+
+  if (!fontsLoaded && !fontError) {
+    return (
+      <SafeAreaProvider>
+        <StatusBar style="light" />
+        <Loading />
+      </SafeAreaProvider>
+    );
+  }
+
   return (
     <SafeAreaProvider>
       <StatusBar style="light" />

@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { arabicText, colors, spacing } from '../theme';
+import { arabicText, colors, fonts, spacing } from '../theme';
 
 export type TabKey = 'home' | 'lessons' | 'flashcards' | 'quiz' | 'progress';
 
@@ -79,11 +79,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 11,
     color: colors.textFaint,
-    fontWeight: '600',
   },
   labelActive: {
     color: colors.primary,
-    fontWeight: '800',
   },
   badge: {
     position: 'absolute',
@@ -98,8 +96,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   badgeText: {
+    fontFamily: fonts.light,
     fontSize: 10,
-    fontWeight: '800',
     color: '#1B1200',
   },
 });

@@ -5,7 +5,7 @@ import { getLesson, LESSONS } from '../data/lessons';
 import { useProgress } from '../lib/progress';
 import { buildQuiz, Question, questionTitle } from '../lib/quiz';
 import { speakEnglish } from '../lib/speech';
-import { arabicText, colors, radius, spacing } from '../theme';
+import { arabicText, colors, fonts, radius, spacing } from '../theme';
 import { ArabicText, Button, Card, EnglishText, Fraction, ProgressBar } from '../components/ui';
 
 export function QuizScreen({
@@ -224,7 +224,6 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 26,
-    fontWeight: '800',
   },
   subheading: {
     fontSize: 14,
@@ -238,7 +237,6 @@ const styles = StyleSheet.create({
   },
   startTitle: {
     fontSize: 18,
-    fontWeight: '800',
   },
   startSub: {
     fontSize: 13,
@@ -246,7 +244,6 @@ const styles = StyleSheet.create({
   },
   pickTitle: {
     fontSize: 17,
-    fontWeight: '800',
     marginTop: spacing.xl,
     marginBottom: spacing.md,
   },
@@ -268,7 +265,6 @@ const styles = StyleSheet.create({
   lessonRowTitle: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '700',
   },
   chevron: {
     color: colors.textFaint,
@@ -289,12 +285,10 @@ const styles = StyleSheet.create({
   counter: {
     fontSize: 14,
     color: colors.textMuted,
-    fontWeight: '700',
   },
   exit: {
     fontSize: 14,
     color: colors.textFaint,
-    fontWeight: '700',
   },
   quizBody: {
     paddingTop: spacing.lg,
@@ -310,7 +304,6 @@ const styles = StyleSheet.create({
   },
   promptAr: {
     fontSize: 28,
-    fontWeight: '800',
     textAlign: 'center',
   },
   promptEnRow: {
@@ -320,7 +313,6 @@ const styles = StyleSheet.create({
   },
   promptEn: {
     fontSize: 30,
-    fontWeight: '800',
     color: colors.primary,
     textAlign: 'center',
   },
@@ -362,24 +354,23 @@ const styles = StyleSheet.create({
     borderColor: colors.danger,
   },
   optionMark: {
+    fontFamily: fonts.light,
     color: colors.white,
     fontSize: 16,
-    fontWeight: '800',
   },
   optionTextAr: {
     ...arabicText,
     flex: 1,
     color: colors.text,
     fontSize: 16,
-    fontWeight: '600',
   },
   optionTextEn: {
+    fontFamily: fonts.light,
     flex: 1,
     textAlign: 'right',
     writingDirection: 'ltr',
     color: colors.text,
     fontSize: 16,
-    fontWeight: '600',
   },
   explainCard: {
     marginTop: spacing.lg,
@@ -393,7 +384,6 @@ const styles = StyleSheet.create({
   explainEn: {
     flex: 1,
     fontSize: 15,
-    fontStyle: 'italic',
   },
   explainAr: {
     fontSize: 13,
@@ -411,7 +401,6 @@ const styles = StyleSheet.create({
   },
   resultScore: {
     fontSize: 40,
-    fontWeight: '800',
     marginTop: spacing.md,
     color: colors.primary,
   },

@@ -40,10 +40,21 @@ export const radius = {
 };
 
 /**
+ * خط التطبيق: Tajawal بوزن Light (300) في كل الواجهة.
+ * لأننا نحمّل وزناً واحداً فقط، لا نستخدم `fontWeight` في أي مكان — بعض المنصّات
+ * تصطنع وزناً أثقل فيختلف شكل النص بين iOS و Android. التمييز البصري يعتمد على
+ * حجم الخط ولونه بدلاً من ذلك.
+ */
+export const fonts = {
+  light: 'Tajawal_300Light',
+};
+
+/**
  * النصوص العربية تُعرض من اليمين لليسار، والنصوص الإنجليزية من اليسار لليمين.
  * نضبط الاتجاه على مستوى النص بدل فرض RTL على التطبيق كله (الذي يتطلب إعادة تشغيل).
  */
 export const arabicText = {
+  fontFamily: fonts.light,
   textAlign: 'right' as const,
   writingDirection: 'rtl' as const,
 };
@@ -53,6 +64,7 @@ export const arabicText = {
  * كل بطاقة عموداً واحداً متناسقاً، مع إبقاء اتجاه الكتابة نفسه من اليسار لليمين.
  */
 export const latinText = {
+  fontFamily: fonts.light,
   textAlign: 'right' as const,
   writingDirection: 'ltr' as const,
 };

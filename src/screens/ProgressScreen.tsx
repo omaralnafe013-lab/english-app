@@ -4,7 +4,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { LESSONS, LEVELS, TOTAL_WORDS } from '../data/lessons';
 import { completionRatio, useProgress } from '../lib/progress';
 import { isMastered, MAX_BOX } from '../lib/srs';
-import { colors, radius, spacing } from '../theme';
+import { colors, fonts, radius, spacing } from '../theme';
 import { ArabicText, Button, Card, Fraction, ProgressBar, SectionTitle } from '../components/ui';
 
 const GOAL_CHOICES = [5, 10, 20, 30];
@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 26,
-    fontWeight: '800',
     marginBottom: spacing.lg,
   },
   overviewCard: {
@@ -186,7 +185,6 @@ const styles = StyleSheet.create({
   },
   overviewPercent: {
     fontSize: 44,
-    fontWeight: '800',
     color: colors.success,
   },
   overviewSub: {
@@ -213,9 +211,9 @@ const styles = StyleSheet.create({
     fontSize: 19,
   },
   gridValue: {
+    fontFamily: fonts.light,
     color: colors.text,
     fontSize: 19,
-    fontWeight: '800',
     marginTop: 2,
   },
   gridLabel: {
@@ -240,7 +238,6 @@ const styles = StyleSheet.create({
   },
   quizValue: {
     fontSize: 17,
-    fontWeight: '800',
   },
   boxIntro: {
     fontSize: 13,
@@ -265,7 +262,6 @@ const styles = StyleSheet.create({
   boxCount: {
     width: 28,
     fontSize: 13,
-    fontWeight: '800',
     textAlign: 'left',
   },
   levelCard: {
@@ -273,11 +269,9 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     fontSize: 15,
-    fontWeight: '700',
   },
   levelPercent: {
     fontSize: 17,
-    fontWeight: '800',
   },
   levelBar: {
     marginTop: spacing.md,
@@ -310,9 +304,9 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   goalChipText: {
+    fontFamily: fonts.light,
     color: colors.textMuted,
     fontSize: 16,
-    fontWeight: '800',
   },
   goalChipTextActive: {
     color: colors.white,

@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ALL_WORDS, LESSONS, TOTAL_WORDS } from '../data/lessons';
 import { completionRatio, useProgress } from '../lib/progress';
 import { dayNumber } from '../lib/srs';
-import { arabicText, colors, radius, spacing } from '../theme';
+import { arabicText, colors, fonts, radius, spacing } from '../theme';
 import {
   ArabicText,
   Button,
@@ -87,7 +87,6 @@ export function HomeScreen({
           <SpeakButton text={wordOfDay.en} />
           <View style={styles.wordOfDayText}>
             <EnglishText style={styles.wordEn}>{wordOfDay.en}</EnglishText>
-            <ArabicText style={styles.wordSay}>النطق: {wordOfDay.say}</ArabicText>
           </View>
         </View>
         <View style={styles.divider} />
@@ -140,7 +139,6 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 26,
-    fontWeight: '800',
   },
   subGreeting: {
     fontSize: 15,
@@ -166,9 +164,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   statValue: {
+    fontFamily: fonts.light,
     color: colors.text,
     fontSize: 20,
-    fontWeight: '800',
     marginTop: 2,
   },
   statLabel: {
@@ -185,7 +183,6 @@ const styles = StyleSheet.create({
   },
   goalCount: {
     fontSize: 16,
-    fontWeight: '800',
     color: colors.accent,
   },
   goalHint: {
@@ -200,7 +197,6 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 17,
-    fontWeight: '800',
   },
   cardBody: {
     fontSize: 14,
@@ -218,13 +214,7 @@ const styles = StyleSheet.create({
   },
   wordEn: {
     fontSize: 24,
-    fontWeight: '800',
     color: colors.primary,
-  },
-  wordSay: {
-    fontSize: 13,
-    color: colors.textFaint,
-    marginTop: 2,
   },
   divider: {
     height: 1,
@@ -233,13 +223,11 @@ const styles = StyleSheet.create({
   },
   wordAr: {
     fontSize: 18,
-    fontWeight: '700',
     marginBottom: spacing.sm,
   },
   example: {
     fontSize: 14,
     color: colors.textMuted,
-    fontStyle: 'italic',
   },
   exampleAr: {
     fontSize: 13,
@@ -255,7 +243,6 @@ const styles = StyleSheet.create({
   },
   lessonTitle: {
     fontSize: 17,
-    fontWeight: '800',
   },
   lessonMeta: {
     fontSize: 13,

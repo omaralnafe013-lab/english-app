@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 26,
-    fontWeight: '800',
   },
   subheading: {
     fontSize: 14,
@@ -98,7 +97,6 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     fontSize: 19,
-    fontWeight: '800',
   },
   lessonCard: {
     marginBottom: spacing.md,
@@ -130,11 +128,9 @@ const styles = StyleSheet.create({
   check: {
     color: colors.success,
     fontSize: 15,
-    fontWeight: '800',
   },
   lessonTitle: {
     fontSize: 16,
-    fontWeight: '800',
     flexShrink: 1,
   },
   lessonMeta: {

@@ -98,7 +98,6 @@ function WordCard({ word, mastered }: { word: Word; mastered: boolean }) {
             {mastered && <Text style={styles.masteredDot}>✓</Text>}
             <EnglishText style={styles.wordEn}>{word.en}</EnglishText>
           </View>
-          <ArabicText style={styles.wordSay}>{word.say}</ArabicText>
         </View>
       </View>
 
@@ -148,7 +147,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     fontSize: 18,
-    fontWeight: '800',
   },
   headerEmoji: {
     fontSize: 24,
@@ -168,7 +166,6 @@ const styles = StyleSheet.create({
   },
   introEn: {
     fontSize: 14,
-    fontWeight: '700',
   },
   hint: {
     fontSize: 13,
@@ -197,22 +194,14 @@ const styles = StyleSheet.create({
   masteredDot: {
     color: colors.success,
     fontSize: 14,
-    fontWeight: '800',
   },
   wordEn: {
     fontSize: 21,
-    fontWeight: '800',
     color: colors.primary,
     flexShrink: 1,
   },
-  wordSay: {
-    fontSize: 13,
-    color: colors.textFaint,
-    marginTop: 2,
-  },
   wordAr: {
     fontSize: 17,
-    fontWeight: '700',
     marginTop: spacing.md,
   },
   exampleBox: {
@@ -230,7 +219,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: colors.textMuted,
-    fontStyle: 'italic',
   },
   exampleAr: {
     fontSize: 13,
@@ -243,13 +231,11 @@ const styles = StyleSheet.create({
   },
   grammarLabel: {
     fontSize: 12,
-    fontWeight: '800',
     color: colors.accent,
     marginBottom: spacing.xs,
   },
   grammarTitle: {
     fontSize: 18,
-    fontWeight: '800',
     marginBottom: spacing.sm,
   },
   grammarBody: {
@@ -269,7 +255,6 @@ const styles = StyleSheet.create({
   grammarEn: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '600',
   },
   grammarAr: {
     fontSize: 13,

@@ -2,7 +2,7 @@ import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { arabicText, colors, latinText, radius, shadow, spacing } from '../theme';
+import { arabicText, colors, fonts, latinText, radius, shadow, spacing } from '../theme';
 import { speakEnglish } from '../lib/speech';
 
 export function Screen({ children, style }: { children: React.ReactNode; style?: ViewStyle }) {
@@ -205,11 +205,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   fraction: {
+    fontFamily: fonts.light,
     writingDirection: 'ltr',
     textAlign: 'right',
     color: colors.text,
     fontSize: 16,
-    fontWeight: '700',
   },
   card: {
     backgroundColor: colors.card,
@@ -235,7 +235,6 @@ const styles = StyleSheet.create({
   buttonLabel: {
     color: colors.white,
     fontSize: 16,
-    fontWeight: '700',
     ...arabicText,
   },
   progressTrack: {
@@ -256,8 +255,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   pillLabel: {
+    fontFamily: fonts.light,
     fontSize: 12,
-    fontWeight: '700',
   },
   sectionRow: {
     flexDirection: 'row-reverse',
@@ -268,7 +267,6 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 19,
-    fontWeight: '800',
     color: colors.text,
   },
   speakButton: {
@@ -293,7 +291,6 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '800',
     textAlign: 'center',
     marginBottom: spacing.xs,
   },
