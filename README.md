@@ -71,18 +71,22 @@ npx expo start
 
 `Expo Go` مناسب للتجربة فقط. لتحصل على تطبيق مستقل بأيقونته الخاصة يُثبَّت كأي تطبيق آخر، استخدم **EAS Build** (البناء يتم على خوادم Expo — لا تحتاج جهاز Mac).
 
-### التحضير (مرة واحدة)
+### 🪟 على ويندوز — الطريقة الأسهل
+
+**اضغط مرتين على ملف `BUILD-ANDROID.bat`** — يقودك خطوة بخطوة: تسجيل الدخول إلى Expo،
+ربط المشروع، ثم بناء ملف APK. لا تحتاج Android Studio ولا جهاز Mac ولا أي اشتراك مدفوع.
+
+### أو يدوياً
 
 ```bash
-npm install -g eas-cli
-npx eas login          # أنشئ حساباً مجانياً على expo.dev
-npx eas init           # يربط المشروع بحسابك ويضيف projectId
+npx eas-cli@21 login          # أنشئ حساباً مجانياً على expo.dev
+npx eas-cli@21 init           # يربط المشروع بحسابك ويضيف projectId
 ```
 
 ### 🤖 أندرويد — ملف APK للتثبيت المباشر
 
 ```bash
-npx eas build --platform android --profile preview
+npx eas-cli@21 build --platform android --profile preview
 ```
 
 عند انتهاء البناء ستحصل على رابط تحميل ملف `.apk`. افتح الرابط من جوّالك، حمّل الملف، ثم ثبّته
@@ -130,6 +134,8 @@ npx eas submit --platform ios
 
 - **Google Play**: حساب مطوّر برسوم **٢٥ دولاراً مرة واحدة**
 - **App Store**: حساب مطوّر برسوم **٩٩ دولاراً سنوياً**
+- **رابط سياسة خصوصية** — جاهزة في `PRIVACY.md`، ارفعها على GitHub Pages أو أي استضافة وضع رابطها
+- صور من التطبيق، وصف، تصنيف محتوى، ونموذج Data Safety
 
 قبل النشر، غيّر `bundleIdentifier` و `package` في ملف `app.json` إلى معرّف يخصّك.
 
@@ -140,6 +146,8 @@ npx eas submit --platform ios
 ```
 App.tsx                       نقطة الدخول والتنقّل بين الشاشات
 START-APP.bat                 تشغيل التطبيق بضغطة واحدة على ويندوز
+BUILD-ANDROID.bat             بناء ملف APK لأندرويد بضغطة واحدة
+PRIVACY.md                    سياسة الخصوصية (مطلوبة للنشر في Google Play)
 app.json                      إعدادات Expo (الاسم، الأيقونة، معرّفات التطبيق)
 eas.json                      ملفّات تعريف البناء لـ EAS
 src/
