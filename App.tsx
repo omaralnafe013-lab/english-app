@@ -6,6 +6,7 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { IntroAnimation } from './src/components/IntroAnimation';
 import { TabBar, TabKey } from './src/components/TabBar';
 import { Loading, Screen } from './src/components/ui';
 import { getLesson } from './src/data/lessons';
@@ -88,12 +89,16 @@ function AppContent() {
 export default function App() {
   // ننتظر تحميل خط Tajawal قبل العرض حتى لا تظهر الواجهة بالخط الافتراضي ثم تقفز
   const [fontsLoaded, fontError] = useFonts({ Tajawal_300Light });
+  const [introDone, setIntroDone] = useState(false);
 
+  const finishIntro = useCallback(() => setIntroDone(true), []);
+
+  // خلال تحميل الخط نعرض خلفية التطبيق فقط، فتبدو امتداداً لبداية المقدّمة
   if (!fontsLoaded && !fontError) {
     return (
       <SafeAreaProvider>
         <StatusBar style="light" />
-        <Loading />
+        <View style={styles.root} />
       </SafeAreaProvider>
     );
   }
@@ -104,6 +109,8 @@ export default function App() {
       <ProgressProvider>
         <AppContent />
       </ProgressProvider>
+      {/* المقدّمة تعلو التطبيق وهو يُحمّل التقدّم تحتها، ثم تختفي */}
+      {!introDone && <IntroAnimation onFinish={finishIntro} />}
     </SafeAreaProvider>
   );
 }
