@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { getLesson, LESSONS } from '../data/lessons';
+import { useCatalog } from '../lib/catalog';
 import { useProgress } from '../lib/progress';
 import { buildQuiz, Question, questionTitle } from '../lib/quiz';
 import { speakEnglish } from '../lib/speech';
@@ -17,6 +17,7 @@ export function QuizScreen({
   onExit?: () => void;
 }) {
   const { reviewWordById, recordQuiz } = useProgress();
+  const catalog = useCatalog();
 
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [index, setIndex] = useState(0);
@@ -24,13 +25,16 @@ export function QuizScreen({
   const [score, setScore] = useState(0);
   const [sourceLesson, setSourceLesson] = useState<string | undefined>(lessonId);
 
-  const start = useCallback((source?: string) => {
-    setSourceLesson(source);
-    setQuestions(buildQuiz(source));
-    setIndex(0);
-    setSelected(null);
-    setScore(0);
-  }, []);
+  const start = useCallback(
+    (source?: string) => {
+      setSourceLesson(source);
+      setQuestions(buildQuiz(catalog, source));
+      setIndex(0);
+      setSelected(null);
+      setScore(0);
+    },
+    [catalog]
+  );
 
   // بدء الاختبار تلقائياً عند الدخول من صفحة درس
   useEffect(() => {
@@ -85,7 +89,7 @@ export function QuizScreen({
         </Card>
 
         <ArabicText style={styles.pickTitle}>أو اختبر درساً محدداً</ArabicText>
-        {LESSONS.map((lesson) => (
+        {catalog.lessons.map((lesson) => (
           <Pressable
             key={lesson.id}
             onPress={() => start(lesson.id)}
@@ -104,7 +108,7 @@ export function QuizScreen({
   // ── النتيجة النهائية ──
   if (index >= questions.length) {
     const percent = Math.round((score / questions.length) * 100);
-    const lessonTitle = sourceLesson ? getLesson(sourceLesson)?.title : undefined;
+    const lessonTitle = sourceLesson ? catalog.getLesson(sourceLesson)?.title : undefined;
 
     return (
       <View style={styles.centered}>

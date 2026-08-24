@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { ALL_WORDS, getWord } from '../data/lessons';
+import { useCatalog } from '../lib/catalog';
 import { useProgress } from '../lib/progress';
 import { MAX_BOX } from '../lib/srs';
 import { speakEnglish } from '../lib/speech';
@@ -14,6 +14,7 @@ type SessionResult = { known: number; unknown: number };
 
 export function FlashcardsScreen() {
   const { progress, dueWordIds, reviewWordById, markWordSeen } = useProgress();
+  const { allWords, getWord } = useCatalog();
 
   const [queue, setQueue] = useState<string[] | null>(null);
   const [index, setIndex] = useState(0);
@@ -24,8 +25,8 @@ export function FlashcardsScreen() {
 
   /** الكلمات الجديدة التي لم يبدأها المستخدم بعد. */
   const newWordIds = useMemo(
-    () => ALL_WORDS.filter((word) => !progress.words[word.id]).map((word) => word.id),
-    [progress.words]
+    () => allWords.filter((word) => !progress.words[word.id]).map((word) => word.id),
+    [progress.words, allWords]
   );
 
   const runFlip = useCallback(
@@ -134,7 +135,7 @@ export function FlashcardsScreen() {
             label="مراجعة عشوائية"
             icon="🔀"
             variant="ghost"
-            onPress={() => startSession(ALL_WORDS.map((word) => word.id))}
+            onPress={() => startSession(allWords.map((word) => word.id))}
           />
         </Card>
 

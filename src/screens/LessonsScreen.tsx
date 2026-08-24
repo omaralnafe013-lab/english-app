@@ -1,7 +1,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { LESSONS, LEVELS, Lesson } from '../data/lessons';
+import { LEVELS, Lesson } from '../data/lessons';
+import { useCatalog } from '../lib/catalog';
 import { useProgress } from '../lib/progress';
 import { isMastered } from '../lib/srs';
 import { colors, radius, spacing } from '../theme';
@@ -9,6 +10,7 @@ import { ArabicText, Card, Pill, ProgressBar } from '../components/ui';
 
 export function LessonsScreen({ onOpenLesson }: { onOpenLesson: (lessonId: string) => void }) {
   const { progress } = useProgress();
+  const { lessons } = useCatalog();
 
   /** نسبة الكلمات المتقنة داخل الدرس. */
   const lessonMastery = (lesson: Lesson) => {
@@ -20,11 +22,11 @@ export function LessonsScreen({ onOpenLesson }: { onOpenLesson: (lessonId: strin
     <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <ArabicText style={styles.heading}>الدروس</ArabicText>
       <ArabicText style={styles.subheading}>
-        {LESSONS.length} درساً مرتّبة من الأسهل إلى الأصعب. ابدأ من المستوى الأول إن كنت مبتدئاً.
+        {lessons.length} درساً مرتّبة من الأسهل إلى الأصعب. ابدأ من المستوى الأول إن كنت مبتدئاً.
       </ArabicText>
 
       {LEVELS.map((level) => {
-        const levelLessons = LESSONS.filter((lesson) => lesson.level === level.id);
+        const levelLessons = lessons.filter((lesson) => lesson.level === level.id);
         if (levelLessons.length === 0) return null;
 
         return (

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { ALL_WORDS, TOTAL_WORDS } from '../data/lessons';
+import { useCatalog } from './catalog';
 import { dayNumber, isDue, isMastered, newWordState, reviewWord, WordState } from './srs';
 
 const STORAGE_KEY = '@english_app/progress/v1';
@@ -11,6 +11,8 @@ export const XP_PER_CORRECT_QUIZ = 10;
 export const XP_PER_LESSON = 30;
 
 export type Progress = {
+  /** الاسم الذي يظهر للمعلم عند مشاركة التقدّم — فارغ حتى يكتبه الطالب */
+  studentName: string;
   xp: number;
   words: Record<string, WordState>;
   completedLessons: string[];
@@ -22,6 +24,7 @@ export type Progress = {
 
 export function emptyProgress(): Progress {
   return {
+    studentName: '',
     xp: 0,
     words: {},
     completedLessons: [],
@@ -39,6 +42,7 @@ function hydrate(raw: unknown): Progress {
   const saved = raw as Partial<Progress>;
 
   return {
+    studentName: typeof saved.studentName === 'string' ? saved.studentName : base.studentName,
     xp: typeof saved.xp === 'number' ? saved.xp : base.xp,
     words: saved.words && typeof saved.words === 'object' ? saved.words : base.words,
     completedLessons: Array.isArray(saved.completedLessons) ? saved.completedLessons : base.completedLessons,
@@ -82,12 +86,15 @@ type ProgressContextValue = {
   completeLesson: (lessonId: string) => void;
   recordQuiz: (correct: number, answered: number) => void;
   setDailyGoal: (goal: number) => void;
+  setStudentName: (name: string) => void;
   resetProgress: () => void;
 };
 
 const ProgressContext = createContext<ProgressContextValue | null>(null);
 
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
+  // المنهج قد ينمو بدروس يضيفها المعلم، فالمراجعات المستحقّة تُحسب منه لا من قائمة ثابتة
+  const { allWords } = useCatalog();
   const [progress, setProgress] = useState<Progress>(emptyProgress);
   const [loading, setLoading] = useState(true);
   const loadedRef = useRef(false);
@@ -175,6 +182,10 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     setProgress((prev) => ({ ...prev, dailyGoal: goal }));
   }, []);
 
+  const setStudentName = useCallback((name: string) => {
+    setProgress((prev) => ({ ...prev, studentName: name }));
+  }, []);
+
   const resetProgress = useCallback(() => {
     setProgress(emptyProgress());
   }, []);
@@ -184,9 +195,9 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     const states = progress.words;
     const startedCount = Object.keys(states).length;
     const masteredCount = Object.values(states).filter(isMastered).length;
-    const dueWordIds = ALL_WORDS.filter((word) => isDue(states[word.id], today)).map((word) => word.id);
+    const dueWordIds = allWords.filter((word) => isDue(states[word.id], today)).map((word) => word.id);
     return { startedCount, masteredCount, dueWordIds };
-  }, [progress.words]);
+  }, [progress.words, allWords]);
 
   const value = useMemo<ProgressContextValue>(
     () => ({
@@ -198,9 +209,21 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       completeLesson,
       recordQuiz,
       setDailyGoal,
+      setStudentName,
       resetProgress,
     }),
-    [progress, loading, derived, reviewWordById, markWordSeen, completeLesson, recordQuiz, setDailyGoal, resetProgress]
+    [
+      progress,
+      loading,
+      derived,
+      reviewWordById,
+      markWordSeen,
+      completeLesson,
+      recordQuiz,
+      setDailyGoal,
+      setStudentName,
+      resetProgress,
+    ]
   );
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
@@ -215,6 +238,6 @@ export function useProgress(): ProgressContextValue {
 }
 
 /** نسبة إتمام المنهج كاملاً (0 إلى 1). */
-export function completionRatio(masteredCount: number): number {
-  return TOTAL_WORDS === 0 ? 0 : masteredCount / TOTAL_WORDS;
+export function completionRatio(masteredCount: number, totalWords: number): number {
+  return totalWords === 0 ? 0 : masteredCount / totalWords;
 }

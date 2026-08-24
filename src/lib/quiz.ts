@@ -1,4 +1,5 @@
-import { ALL_WORDS, getLesson, Word } from '../data/lessons';
+import { Word } from '../data/lessons';
+import { Catalog } from './catalog';
 
 export type QuestionKind = 'en-to-ar' | 'ar-to-en' | 'listen';
 
@@ -39,13 +40,13 @@ function buildOptions(correct: string, pool: Word[], pick: (word: Word) => strin
 }
 
 /**
- * يولّد اختباراً من درس محدّد، أو من كل كلمات التطبيق عند عدم تمرير درس.
+ * يولّد اختباراً من درس محدّد، أو من كل كلمات المنهج عند عدم تمرير درس.
  * عند نقص الكلمات في الدرس نكمل مجموعة الخيارات من باقي الكلمات.
  */
-export function buildQuiz(lessonId?: string): Question[] {
-  const lesson = lessonId ? getLesson(lessonId) : undefined;
-  const source: Word[] = lesson ? lesson.words : ALL_WORDS;
-  const optionPool: Word[] = source.length >= 4 ? [...source, ...ALL_WORDS] : ALL_WORDS;
+export function buildQuiz(catalog: Catalog, lessonId?: string): Question[] {
+  const lesson = lessonId ? catalog.getLesson(lessonId) : undefined;
+  const source: Word[] = lesson ? lesson.words : catalog.allWords;
+  const optionPool: Word[] = source.length >= 4 ? [...source, ...catalog.allWords] : catalog.allWords;
 
   const kinds: QuestionKind[] = ['en-to-ar', 'ar-to-en', 'listen'];
 

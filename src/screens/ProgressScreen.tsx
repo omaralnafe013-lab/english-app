@@ -1,16 +1,20 @@
-import React from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { LESSONS, LEVELS, TOTAL_WORDS } from '../data/lessons';
+import { LEVELS } from '../data/lessons';
+import { useCatalog } from '../lib/catalog';
 import { completionRatio, useProgress } from '../lib/progress';
 import { isMastered, MAX_BOX } from '../lib/srs';
 import { colors, fonts, radius, spacing } from '../theme';
+import { ConfirmDialog } from '../components/forms';
 import { ArabicText, Button, Card, Fraction, ProgressBar, SectionTitle } from '../components/ui';
+import { ImportLessonsSheet, ShareProgressSheet } from './ShareSheets';
 
 const GOAL_CHOICES = [5, 10, 20, 30];
 
-export function ProgressScreen() {
+export function ProgressScreen({ onOpenTeacher }: { onOpenTeacher: () => void }) {
   const { progress, masteredCount, startedCount, dueWordIds, setDailyGoal, resetProgress } = useProgress();
+  const { lessons, totalWords } = useCatalog();
 
   const quizAccuracy =
     progress.quiz.answered > 0 ? Math.round((progress.quiz.correct / progress.quiz.answered) * 100) : 0;
@@ -20,16 +24,10 @@ export function ProgressScreen() {
     Object.values(progress.words).filter((state) => state.box === i + 1).length
   );
 
-  const confirmReset = () => {
-    Alert.alert(
-      'تصفير التقدّم',
-      'سيتم حذف كل النقاط والكلمات المحفوظة وسلسلة الأيام. لا يمكن التراجع عن هذه الخطوة.',
-      [
-        { text: 'إلغاء', style: 'cancel' },
-        { text: 'حذف الكل', style: 'destructive', onPress: resetProgress },
-      ]
-    );
-  };
+  // حوار مخصّص بدل Alert لأن Alert.alert لا يعرض شيئاً على الويب
+  const [confirmReset, setConfirmReset] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
 
   return (
     <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -38,11 +36,11 @@ export function ProgressScreen() {
       <Card style={styles.overviewCard}>
         <ArabicText style={styles.overviewLabel}>نسبة إتقان المنهج</ArabicText>
         <ArabicText style={styles.overviewPercent}>
-          {Math.round(completionRatio(masteredCount) * 100)}%
+          {Math.round(completionRatio(masteredCount, totalWords) * 100)}%
         </ArabicText>
-        <ProgressBar value={completionRatio(masteredCount)} color={colors.success} />
+        <ProgressBar value={completionRatio(masteredCount, totalWords)} color={colors.success} />
         <ArabicText style={styles.overviewSub}>
-          {masteredCount} كلمة متقنة من أصل {TOTAL_WORDS}
+          {masteredCount} كلمة متقنة من أصل {totalWords}
         </ArabicText>
       </Card>
 
@@ -96,7 +94,7 @@ export function ProgressScreen() {
 
       <SectionTitle title="التقدّم حسب المستوى" />
       {LEVELS.map((level) => {
-        const levelWords = LESSONS.filter((lesson) => lesson.level === level.id).flatMap(
+        const levelWords = lessons.filter((lesson) => lesson.level === level.id).flatMap(
           (lesson) => lesson.words
         );
         const mastered = levelWords.filter((word) => isMastered(progress.words[word.id])).length;
@@ -144,14 +142,46 @@ export function ProgressScreen() {
         </View>
       </Card>
 
+      <SectionTitle title="المعلم والصف" />
+      <Card style={styles.teacherCard}>
+        <ArabicText style={styles.teacherIntro}>
+          شارك تقدّمك مع معلّمك بكود نصّي، أو استورد الدروس التي يرسلها لك. كل شيء يتم بلا حساب
+          وبلا إنترنت.
+        </ArabicText>
+        <Button label="مشاركة تقدّمي مع المعلم" icon="📤" onPress={() => setShareOpen(true)} />
+        <Button
+          label="استيراد دروس من المعلم"
+          icon="📥"
+          variant="ghost"
+          onPress={() => setImportOpen(true)}
+        />
+        <Button label="فتح لوحة المعلم" icon="📊" variant="ghost" onPress={onOpenTeacher} />
+      </Card>
+
       <View style={styles.dangerZone}>
-        <Button label="تصفير كل التقدّم" variant="ghost" onPress={confirmReset} />
+        <Button label="تصفير كل التقدّم" variant="ghost" onPress={() => setConfirmReset(true)} />
         <ArabicText style={styles.dangerNote}>
           بياناتك محفوظة على هذا الجهاز فقط ولا تُرسل إلى أي خادم.
         </ArabicText>
       </View>
 
       <View style={{ height: spacing.xl }} />
+
+      <ShareProgressSheet visible={shareOpen} onClose={() => setShareOpen(false)} />
+      <ImportLessonsSheet visible={importOpen} onClose={() => setImportOpen(false)} />
+
+      <ConfirmDialog
+        visible={confirmReset}
+        title="تصفير التقدّم"
+        message="سيتم حذف كل النقاط والكلمات المحفوظة وسلسلة الأيام. لا يمكن التراجع عن هذه الخطوة."
+        confirmLabel="حذف الكل"
+        destructive
+        onCancel={() => setConfirmReset(false)}
+        onConfirm={() => {
+          setConfirmReset(false);
+          resetProgress();
+        }}
+      />
     </ScrollView>
   );
 }
@@ -310,6 +340,15 @@ const styles = StyleSheet.create({
   },
   goalChipTextActive: {
     color: colors.white,
+  },
+  teacherCard: {
+    gap: spacing.sm,
+  },
+  teacherIntro: {
+    fontSize: 13,
+    color: colors.textMuted,
+    lineHeight: 22,
+    marginBottom: spacing.xs,
   },
   dangerZone: {
     marginTop: spacing.xxl,

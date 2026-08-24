@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { ALL_WORDS, LESSONS, TOTAL_WORDS } from '../data/lessons';
+import { Word } from '../data/lessons';
+import { useCatalog } from '../lib/catalog';
 import { completionRatio, useProgress } from '../lib/progress';
 import { dayNumber } from '../lib/srs';
 import { arabicText, colors, fonts, radius, spacing } from '../theme';
@@ -18,8 +19,8 @@ import {
 import type { TabKey } from '../components/TabBar';
 
 /** كلمة اليوم — تتغيّر يومياً بشكل ثابت لكل المستخدمين على نفس التاريخ. */
-function useWordOfTheDay() {
-  return useMemo(() => ALL_WORDS[dayNumber() % ALL_WORDS.length], []);
+function useWordOfTheDay(words: Word[]): Word | undefined {
+  return useMemo(() => (words.length > 0 ? words[dayNumber() % words.length] : undefined), [words]);
 }
 
 export function HomeScreen({
@@ -30,15 +31,16 @@ export function HomeScreen({
   onOpenLesson: (lessonId: string) => void;
 }) {
   const { progress, masteredCount, startedCount, dueWordIds } = useProgress();
-  const wordOfDay = useWordOfTheDay();
+  const { lessons, allWords, totalWords } = useCatalog();
+  const wordOfDay = useWordOfTheDay(allWords);
 
   const goalProgress = progress.dailyGoal > 0 ? progress.today.reviews / progress.dailyGoal : 0;
   const goalReached = progress.today.reviews >= progress.dailyGoal;
 
   // الدرس التالي = أول درس لم يكتمل بعد
   const nextLesson = useMemo(
-    () => LESSONS.find((lesson) => !progress.completedLessons.includes(lesson.id)) ?? LESSONS[0],
-    [progress.completedLessons]
+    () => lessons.find((lesson) => !progress.completedLessons.includes(lesson.id)) ?? lessons[0],
+    [progress.completedLessons, lessons]
   );
 
   return (
@@ -81,38 +83,48 @@ export function HomeScreen({
       )}
 
       {/* كلمة اليوم */}
-      <SectionTitle title="كلمة اليوم" />
-      <Card>
-        <View style={styles.rowBetween}>
-          <SpeakButton text={wordOfDay.en} />
-          <View style={styles.wordOfDayText}>
-            <EnglishText style={styles.wordEn}>{wordOfDay.en}</EnglishText>
-          </View>
-        </View>
-        <View style={styles.divider} />
-        <ArabicText style={styles.wordAr}>{wordOfDay.ar}</ArabicText>
-        <EnglishText style={styles.example}>{wordOfDay.example}</EnglishText>
-        <ArabicText style={styles.exampleAr}>{wordOfDay.exampleAr}</ArabicText>
-      </Card>
+      {!!wordOfDay && (
+        <>
+          <SectionTitle title="كلمة اليوم" />
+          <Card>
+            <View style={styles.rowBetween}>
+              <SpeakButton text={wordOfDay.en} />
+              <View style={styles.wordOfDayText}>
+                <EnglishText style={styles.wordEn}>{wordOfDay.en}</EnglishText>
+              </View>
+            </View>
+            <View style={styles.divider} />
+            <ArabicText style={styles.wordAr}>{wordOfDay.ar}</ArabicText>
+            <EnglishText style={styles.example}>{wordOfDay.example}</EnglishText>
+            <ArabicText style={styles.exampleAr}>{wordOfDay.exampleAr}</ArabicText>
+          </Card>
+        </>
+      )}
 
       {/* متابعة الدروس */}
-      <SectionTitle title="أكمل من حيث توقفت" />
-      <Card onPress={() => onOpenLesson(nextLesson.id)}>
-        <View style={styles.rowBetween}>
-          <Text style={styles.lessonEmoji}>{nextLesson.emoji}</Text>
-          <View style={styles.lessonText}>
-            <ArabicText style={styles.lessonTitle}>{nextLesson.title}</ArabicText>
-            <ArabicText style={styles.lessonMeta}>{nextLesson.words.length} كلمة · قاعدة نحوية</ArabicText>
-          </View>
-        </View>
-      </Card>
+      {!!nextLesson && (
+        <>
+          <SectionTitle title="أكمل من حيث توقفت" />
+          <Card onPress={() => onOpenLesson(nextLesson.id)}>
+            <View style={styles.rowBetween}>
+              <Text style={styles.lessonEmoji}>{nextLesson.emoji}</Text>
+              <View style={styles.lessonText}>
+                <ArabicText style={styles.lessonTitle}>{nextLesson.title}</ArabicText>
+                <ArabicText style={styles.lessonMeta}>
+                  {nextLesson.words.length} كلمة · قاعدة نحوية
+                </ArabicText>
+              </View>
+            </View>
+          </Card>
+        </>
+      )}
 
       {/* التقدّم العام */}
       <SectionTitle title="تقدّمك في المنهج" />
       <Card>
-        <ProgressBar value={completionRatio(masteredCount)} color={colors.success} />
+        <ProgressBar value={completionRatio(masteredCount, totalWords)} color={colors.success} />
         <ArabicText style={styles.overallText}>
-          أتقنت {masteredCount} من {TOTAL_WORDS} كلمة · بدأت بـ {startedCount} كلمة
+          أتقنت {masteredCount} من {totalWords} كلمة · بدأت بـ {startedCount} كلمة
         </ArabicText>
         <Button label="اختبر نفسك الآن" icon="🎯" variant="ghost" onPress={() => onNavigate('quiz')} />
       </Card>
